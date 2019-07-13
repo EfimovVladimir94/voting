@@ -8,6 +8,6 @@
     <import resource="spring-tools.xml"/>
     <import resource="spring-security.xml"/>
 
-<context:component-scan base-package="ru.restaurant.**.service"/>
+    <context:component-scan base-package="ru.restaurant.**.service"/>
 
 </beans>

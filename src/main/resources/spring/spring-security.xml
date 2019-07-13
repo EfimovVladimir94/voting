@@ -9,7 +9,7 @@
         <intercept-url pattern="/rest/menu" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/rest/restaurants/*/vote" access="isAuthenticated()"/>
         <intercept-url pattern="/rest/restaurants/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/rest/dishes" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/rest/dishes/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <csrf disabled="true"/>
     </http>

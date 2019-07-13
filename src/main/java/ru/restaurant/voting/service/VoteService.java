@@ -14,28 +14,26 @@ public interface VoteService {
 
     List<Vote> getAll(int userId);
 
-    List<Vote> getVoteIsBetweenDate(int userId, LocalDate startDate, LocalDate endDate);
+    List<Vote> getBetweenDates(int userId, LocalDate startDate, LocalDate endDate);
 
     class UpdatedVote extends Vote {
-
         private boolean isCreated;
-
         private Vote vote;
 
-        public UpdatedVote() {
+        private UpdatedVote() {
         }
 
-        public UpdatedVote(Vote vote, boolean isCreated) {
+        private UpdatedVote(Vote vote, boolean isCreated) {
             this();
             this.isCreated = isCreated;
             this.vote = vote;
         }
 
-        public static UpdatedVote getCreated(Vote vote) {
+        static UpdatedVote getCreated(Vote vote){
             return new UpdatedVote(vote, true);
         }
 
-        public static UpdatedVote getUpdated(Vote vote) {
+        static UpdatedVote getUpdated(Vote vote){
             return new UpdatedVote(vote, false);
         }
 
@@ -46,7 +44,5 @@ public interface VoteService {
         public Vote getVote() {
             return vote;
         }
-
-
     }
 }

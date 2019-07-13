@@ -10,21 +10,22 @@ import ru.restaurant.voting.model.Dish;
 import ru.restaurant.voting.model.Menu;
 import ru.restaurant.voting.model.Restaurant;
 import ru.restaurant.voting.model.Vote;
-import ru.restaurant.voting.service.*;
+import ru.restaurant.voting.service.DishService;
+import ru.restaurant.voting.service.MenuService;
+import ru.restaurant.voting.service.RestaurantService;
+import ru.restaurant.voting.service.VoteService;
 import ru.restaurant.voting.to.MenuTo;
+import ru.restaurant.voting.util.Util;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.restaurant.voting.util.Util.orElse;
-
 @RestController
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
-
-    static final String REST_URL = "rest/restaurant";
+    static final String REST_URL = "/rest/restaurants";
 
     @Autowired
     RestaurantService service;
@@ -40,7 +41,7 @@ public class RestaurantController {
 
     @GetMapping
     public List<Restaurant> getAll() {
-        return service.getAllRestaurants();
+        return service.getAll();
     }
 
     @GetMapping(value = "/{id}")
@@ -50,85 +51,82 @@ public class RestaurantController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
+        Restaurant created = service.create(restaurant);
 
-        Restaurant create = service.create(restaurant);
-        URI uriNeResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(create.getId()).toUri();
+                .buildAndExpand(created.getId()).toUri();
 
-        return ResponseEntity.created(uriNeResource).body(create);
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateRestaurant(@RequestBody Restaurant restaurant, @PathVariable int id) {
+    public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
         service.update(restaurant, id);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteRestaurant(@PathVariable int id) {
+    public void delete(@PathVariable int id) {
         service.delete(id);
     }
 
     @GetMapping(value = "/{id}/menu")
     public Menu getMenu(@PathVariable int id,
                         @RequestParam(value = "date", required = false) LocalDate date) {
-        return menuService.getRestaurantAndDishes(orElse(date, LocalDate.now()), id);
+        return menuService.getWithRestaurantAndDishes(Util.orElse(date, LocalDate.now()), id);
     }
 
-    @PutMapping(value = "/{id}/menu", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}/menu")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateMenu(@PathVariable int id,
-                           @RequestParam(value = "date") LocalDate date,
-                           @RequestBody MenuTo menuTo) {
-        menuService.updateDishes(orElse(date, LocalDate.now()), id, menuTo.getDishes());
-    }
-
-    @GetMapping(value = "/menu/dishes/{id}")
-    public Dish getDishes(@PathVariable int id) {
-        return dishService.get(id);
+                           @RequestParam(required = false) LocalDate date,
+                           @Valid @RequestBody MenuTo menuTo) {
+        menuService.updateDishes(Util.orElse(date, LocalDate.now()), id, menuTo.getDishes());
     }
 
     @PostMapping(value = "/{id}/menu/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createDishWithLocation(@PathVariable int id,
-                                                       @Valid @RequestBody Dish dish,
-                                                       @RequestParam(value = "date", required = false) LocalDate date) {
+                                                       @RequestParam(required = false) LocalDate date,
+                                                       @Valid @RequestBody Dish dish) {
+        Dish created = dishService.create(dish, id, Util.orElse(date, LocalDate.now()));
 
-        Dish create = dishService.create(dish, id, orElse(date, LocalDate.now()));
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/menu/dishes/{id}")
+                .buildAndExpand(created.getId()).toUri();
 
-        URI uriNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "menu/dishes/{id}")
-                .buildAndExpand(create.getId()).toUri();
-        return ResponseEntity.created(uriNewResource).body(create);
+        return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
+    @GetMapping(value = "/menu/dishes/{id}")
+    public Dish getDish(@PathVariable int id) {
+        return dishService.get(id);
     }
 
     @PutMapping(value = "/menu/dishes/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateDish(@PathVariable int id,
-                           @Valid @RequestBody Dish dish) {
+    public void updateDish(@PathVariable int id, @Valid @RequestBody Dish dish) {
         dishService.update(dish, id);
     }
 
-    @DeleteMapping("/menu/dishes/{id}")
+    @DeleteMapping(value = "/menu/dishes/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteDish(@PathVariable int id) {
         dishService.delete(id);
     }
 
-    @PutMapping(value = "{id}/vote")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @PutMapping(value = "/{id}/vote")
     public ResponseEntity<Vote> vote(@PathVariable int id) {
         VoteService.UpdatedVote updatedVote = voteService.createOrUpdate(id, SecurityUtil.authUserId());
-
         if (updatedVote.isCreated()) {
-            URI uriNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(REST_URL + "/{id}/vote")
+            URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(VoteController.REST_URL + "/{id}")
                     .buildAndExpand(updatedVote.getVote().getId()).toUri();
 
-            return ResponseEntity.created(uriNewResource).body(updatedVote);
+            return ResponseEntity.created(uriOfNewResource).body(updatedVote.getVote());
         } else {
-            return new ResponseEntity<Vote>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 }

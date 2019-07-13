@@ -5,18 +5,20 @@ import org.hibernate.validator.constraints.SafeHtml;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
-public class UserTo extends BaseTo {
+public class UserTo extends BaseTo implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @NotBlank
     @Size(min = 2, max = 100)
-    @SafeHtml // https://stackoverflow.com/questions/17480809
+    @SafeHtml
     private String name;
 
     @Email
     @NotBlank
     @Size(max = 100)
-    @SafeHtml
+    @SafeHtml // https://stackoverflow.com/questions/17480809
     private String email;
 
     @Size(min = 5, max = 32)
@@ -29,6 +31,14 @@ public class UserTo extends BaseTo {
         super(id);
         this.name = name;
         this.email = email;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -48,21 +58,12 @@ public class UserTo extends BaseTo {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public String toString() {
         return "UserTo{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", id=" + id +
                 '}';
     }
 }

@@ -7,7 +7,6 @@ public enum ErrorType {
     VALIDATION_ERROR("error.validationError"),
     WRONG_REQUEST("error.wrongRequest");
 
-
     private final String errorCode;
 
     ErrorType(String errorCode) {

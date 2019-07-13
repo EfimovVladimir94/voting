@@ -1,21 +1,25 @@
 package ru.restaurant.voting.util.exception;
 
-
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 
 public class ApplicationException extends RuntimeException {
+
     private final ErrorType type;
-    private final String msg;
-    private final HttpStatus status;
+    private final String msgCode;
+    private final HttpStatus httpStatus;
     private final String[] args;
 
-    public ApplicationException(ErrorType type, String msg, HttpStatus status, String... args) {
-        super(String.format("type=%s, msg=%s, args=%s", type, msg, Arrays.toString(args)));
+    public ApplicationException(String msgCode, HttpStatus httpStatus) {
+        this(ErrorType.APP_ERROR, msgCode, httpStatus);
+    }
+
+    public ApplicationException(ErrorType type, String msgCode, HttpStatus httpStatus, String... args) {
+        super(String.format("type=%s, msgCode=%s, args=%s", type, msgCode, Arrays.toString(args)));
         this.type = type;
-        this.msg = msg;
-        this.status = status;
+        this.msgCode = msgCode;
+        this.httpStatus = httpStatus;
         this.args = args;
     }
 
@@ -23,12 +27,12 @@ public class ApplicationException extends RuntimeException {
         return type;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMsgCode() {
+        return msgCode;
     }
 
-    public HttpStatus getStatus() {
-        return status;
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 
     public String[] getArgs() {

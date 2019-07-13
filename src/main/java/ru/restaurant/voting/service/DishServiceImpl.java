@@ -29,6 +29,7 @@ public class DishServiceImpl implements DishService {
     MenuService menuService;
 
     @CacheEvict(value = "menu", allEntries = true)
+    @Transactional
     @Override
     public Dish create(Dish dish, int restaurantId, LocalDate date) {
         Assert.notNull(dish, "dish must not be null");
@@ -40,12 +41,13 @@ public class DishServiceImpl implements DishService {
     }
 
     @CacheEvict(value = "menu", allEntries = true)
+    @Transactional
     @Override
     public void update(Dish dish, int id) {
         Assert.notNull(dish, "dish must not be null");
         Menu menu = checkNotFoundWithId(repository.findById(id), id).getMenu();
         checkMenuDateBeforeUpdate(menu.getDate());
-        assureIdConsistent(menu, id);
+        assureIdConsistent(dish, id);
         dish.setMenu(menu);
         repository.save(dish);
     }

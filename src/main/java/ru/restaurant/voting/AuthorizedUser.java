@@ -5,7 +5,7 @@ import ru.restaurant.voting.to.UserTo;
 import ru.restaurant.voting.util.UserUtil;
 
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
-    public static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private UserTo userTo;
 

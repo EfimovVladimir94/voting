@@ -17,10 +17,15 @@ import static ru.restaurant.voting.util.ValidationUtil.*;
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
 
-    public static final Sort SORT_NAME = new Sort(Sort.Direction.ASC, "name");
+    private static final Sort SORT_NAME = new Sort(Sort.Direction.ASC, "name");
 
     @Autowired
     RestaurantRepository repository;
+
+    @Override
+    public List<Restaurant> getAll() {
+        return repository.findAll(SORT_NAME);
+    }
 
     @Override
     public Restaurant get(int id) throws NotFoundException {
@@ -28,27 +33,20 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() {
-        return repository.findAll(SORT_NAME);
-    }
-
-    @Override
     public Restaurant create(Restaurant restaurant) {
-        Assert.notNull(restaurant, "name is not be null");
+        Assert.notNull(restaurant, "restaurant must not be null");
         checkNew(restaurant);
         return repository.save(restaurant);
-
     }
 
     @CacheEvict(value = "menu", allEntries = true)
     @Transactional
     @Override
     public void update(Restaurant restaurant, int id) {
-        Assert.notNull(restaurant, "restaurant is not be nul");
+        Assert.notNull(restaurant, "restaurant must not be null");
         checkNotFoundWithId(repository.findById(id), id);
         assureIdConsistent(restaurant, id);
         repository.save(restaurant);
-
     }
 
     @CacheEvict(value = "menu", allEntries = true)

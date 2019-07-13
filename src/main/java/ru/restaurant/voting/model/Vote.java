@@ -10,13 +10,13 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "votes")
-public class Vote extends AbstractBaseEntity {
+public class Vote extends AbstractBaseEntity{
 
     @Column(name = "date", nullable = false)
     @NotNull
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Menu menu;
@@ -68,10 +68,8 @@ public class Vote extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Vote{" +
-                "date=" + date +
-                ", menu=" + menu +
-                ", user=" + user +
-                ", id=" + id +
+                "id=" + id +
+                ", date=" + date +
                 '}';
     }
 }

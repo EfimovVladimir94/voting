@@ -5,10 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.restaurant.voting.repository.UserRepository;
 import ru.restaurant.voting.AuthorizedUser;
 import ru.restaurant.voting.model.User;
-import ru.restaurant.voting.repository.UserRepository;
-import ru.restaurant.voting.util.exception.NotFoundException;
 
 @Service("userService")
 public class UserService implements UserDetailsService {
@@ -20,7 +19,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = repository.getByEmail(email.toLowerCase());
         if (user == null) {
-            throw new NotFoundException("User" + email + "is not found");
+            throw new UsernameNotFoundException("User " + email + " is not found");
         }
         return new AuthorizedUser(user);
     }

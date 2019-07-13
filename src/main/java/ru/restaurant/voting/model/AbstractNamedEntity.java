@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @MappedSuperclass
-public class AbstractNamedEntity extends AbstractBaseEntity {
+public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 
     @NotBlank
     @Size(min = 2, max = 100)
@@ -21,16 +21,16 @@ public class AbstractNamedEntity extends AbstractBaseEntity {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     @Override
     public String toString() {
-        return String.format("Entity %s (%s,'%s')", getClass().getName(), id, name);
+        return String.format("Entity %s (%s, '%s')", getClass().getName(), id, name);
     }
 }

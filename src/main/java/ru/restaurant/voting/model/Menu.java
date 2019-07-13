@@ -1,6 +1,5 @@
 package ru.restaurant.voting.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -18,10 +17,9 @@ public class Menu extends AbstractBaseEntity {
     @NotNull
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Restaurant restaurant;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "menu", orphanRemoval = true)
@@ -72,11 +70,9 @@ public class Menu extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Menu{" +
-                "date=" + date +
-                ", restaurant=" + restaurant +
-                ", dishes=" + dishes +
-                ", id=" + id +
+                "id=" + id +
+                ", date=" + date +
+//                ", restaurant=" + restaurant +
                 '}';
     }
 }
-

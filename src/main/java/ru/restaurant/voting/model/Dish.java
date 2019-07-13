@@ -6,16 +6,13 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "dishes")
 public class Dish extends AbstractNamedEntity {
 
+    @Min(value = 1, message = "price must be greater than 0")
     @Column(name = "price", nullable = false)
-    @NotBlank
-    @Size(min = 1)
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,7 +30,7 @@ public class Dish extends AbstractNamedEntity {
         this.menu = menu;
     }
 
-    public Dish(Integer id, String name, @Min(value = 1, message = "price must be greater than 0") int price, Menu menu) {
+    public Dish(Integer id, String name, int price, Menu menu) {
         super(id, name);
         this.price = price;
         this.menu = menu;
@@ -58,10 +55,9 @@ public class Dish extends AbstractNamedEntity {
     @Override
     public String toString() {
         return "Dish{" +
-                "price=" + price +
-                ", menu=" + menu +
+                "id=" + id +
                 ", name='" + name + '\'' +
-                ", id=" + id +
+                ", price=" + price +
                 '}';
     }
 }

@@ -50,7 +50,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL)
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
-                .andExpect(result -> assertThat(service.getAllRestaurants())
+                .andExpect(result -> assertThat(service.getAll())
                         .isEqualTo(List.of(RESTAURANT_100003, RESTAURANT_100004, RESTAURANT_100002, RESTAURANT_100005)));
 
     }
@@ -83,7 +83,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         created.setId(returned.getId());
 
         assertThat(returned).isEqualTo(created);
-        assertThat(service.getAllRestaurants())
+        assertThat(service.getAll())
                 .isEqualTo(List.of(RESTAURANT_100003, created, RESTAURANT_100004, RESTAURANT_100002, RESTAURANT_100005));
     }
 
@@ -106,7 +106,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated))
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isUnprocessableEntity());
-        assertThat(service.getAllRestaurants())
+        assertThat(service.getAll())
                 .isEqualTo(List.of(RESTAURANT_100003, RESTAURANT_100004, RESTAURANT_100002, RESTAURANT_100005));
     }
 
@@ -116,7 +116,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThat(service.getAllRestaurants()).isEqualTo(List.of(RESTAURANT_100003, RESTAURANT_100004, RESTAURANT_100002));
+        assertThat(service.getAll()).isEqualTo(List.of(RESTAURANT_100003, RESTAURANT_100004, RESTAURANT_100002));
     }
 
     @Test
@@ -125,13 +125,13 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
-        assertThat(service.getAllRestaurants()).isEqualTo(List.of(RESTAURANT_100003, RESTAURANT_100004, RESTAURANT_100002, RESTAURANT_100005));
+        assertThat(service.getAll()).isEqualTo(List.of(RESTAURANT_100003, RESTAURANT_100004, RESTAURANT_100002, RESTAURANT_100005));
     }
 
     @Test
     void getMenu() throws Exception {
         mockMvc.perform(get(REST_URL + RESTAURANT_100002.getId() + "/menu")
-                .param("date", "2019-07-11")
+                .param("date", "2018-12-11")
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(result -> assertThat(readFromJsonMvcResult(result, Menu.class)).isEqualTo(MENU_100006));
@@ -163,7 +163,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThat(menuService.getRestaurantAndDishes(LocalDate.parse("2099-01-01"), RESTAURANT_100003.getId()).getDishes())
+        assertThat(menuService.getWithRestaurantAndDishes(LocalDate.parse("2099-01-01"), RESTAURANT_100003.getId()).getDishes())
                 .usingElementComparatorIgnoringFields("id", "menu")
                 .isEqualTo(updated.getDishes());
     }
@@ -191,7 +191,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         created.setId(returned.getId());
         assertThat(returned).isEqualTo(created);
 
-        assertThat(dishRepository.findAllDishByMenuId(MENU_100009.getId()))
+        assertThat(dishRepository.findAllByMenuIdOrderById(MENU_100009.getId()))
                 .isEqualTo(List.of(DISH_100013, created));
 
     }
@@ -227,7 +227,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         mockMvc.perform(delete(REST_URL + "/menu/dishes/" + DISH_100013.getId())
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isNoContent());
-        assertThat(dishRepository.findAllDishByMenuId(MENU_100009.getId()))
+        assertThat(dishRepository.findAllByMenuIdOrderById(MENU_100009.getId()))
                 .isEqualTo(Collections.emptyList());
     }
 
@@ -242,7 +242,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         created.setId(returned.getId());
         assertThat(returned).isEqualTo(created);
         LocalDate now = LocalDate.now();
-        assertThat(voteService.getVoteIsBetweenDate(USER_ID, now, now)).isEqualTo(List.of(created));
+        assertThat(voteService.getBetweenDates(USER_ID, now, now)).isEqualTo(List.of(created));
     }
 
     @Test

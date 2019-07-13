@@ -7,17 +7,11 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import ru.restaurant.voting.util.exception.ApplicationException;
 
-import java.util.Locale;
-
 @Component
 public class MessageUtil {
 
     @Autowired
-    private final MessageSource messageSource;
-
-    public MessageUtil(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
+    MessageSource messageSource;
 
     public String getMessage(String code, String... args) {
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
@@ -28,6 +22,6 @@ public class MessageUtil {
     }
 
     public String getMessage(ApplicationException appEx) {
-        return getMessage(appEx.getMsg(), appEx.getArgs());
+        return getMessage(appEx.getMsgCode(), appEx.getArgs());
     }
 }

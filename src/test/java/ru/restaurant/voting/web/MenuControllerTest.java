@@ -31,7 +31,7 @@ class MenuControllerTest extends AbstractControllerTest {
     @Test
     void getAllForDate() throws Exception {
         mockMvc.perform(get(REST_URL)
-                .param("date","2019-07-11"))
+                .param("date", "2019-07-11"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -49,5 +49,4 @@ class MenuControllerTest extends AbstractControllerTest {
                 .andExpect(result -> assertThat(readListFromJsonMvcResult(result, Menu.class))
                         .isEqualTo(List.of(MENU_100008, MENU_100009)));
     }
-
 }
