@@ -101,13 +101,13 @@ PUT http://localhost:8080/voting/rest/restaurants/100003 \
 Authorization: Basic admin@gmail.com admin \
 Content-Type: application/json
 
-{"name":"Mama Roma Updated"}
+{"name":"Makiaveli Updated"}
 
 curl -X PUT \
   http://localhost:8080/voting/rest/restaurants/100003 \
   -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Mama Roma Updated"}'
+  -d '{"name":"Makiaveli Updated"}'
 
 ### get a menu of restaurant for date (default today)
 GET http://localhost:8080/voting/rest/restaurants/100003/menu?date=2020-01-01 \
