@@ -18,18 +18,18 @@ public class TestData {
     public static final User USER = new User(USER_ID, "User", "user@yandex.ru", "password", Role.ROLE_USER);
     public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN, Role.ROLE_USER);
 
-    public static final Restaurant RESTAURANT_100002 = new Restaurant(100002, "Picasso");
-    public static final Restaurant RESTAURANT_100003 = new Restaurant(100003, "Хан Сарай");
-    public static final Restaurant RESTAURANT_100004 = new Restaurant(100004, "Yahhoo");
-    public static final Restaurant RESTAURANT_100005 = new Restaurant(100005, "Чайхона");
+    public static final Restaurant RESTAURANT_100002 = new Restaurant(100002, "Нихром");
+    public static final Restaurant RESTAURANT_100003 = new Restaurant(100003, "Makiaveli");
+    public static final Restaurant RESTAURANT_100004 = new Restaurant(100004, "Кампай");
+    public static final Restaurant RESTAURANT_100005 = new Restaurant(100005, "Хан Сарай");
 
-    public static final Dish DISH_100010 = new Dish(100010, "Блины", 500, null);
-    public static final Dish DISH_100011 = new Dish(100011, "Салат", 1000, null);
-    public static final Dish DISH_100012 = new Dish(100012, "Суп", 2000, null);
-    public static final Dish DISH_100013 = new Dish(100013, "Пицца", 3500, null);
+    public static final Dish DISH_100010 = new Dish(100010, "Блины", 6000, null);
+    public static final Dish DISH_100011 = new Dish(100011, "Салат", 5000, null);
+    public static final Dish DISH_100012 = new Dish(100012, "Суп", 6000, null);
+    public static final Dish DISH_100013 = new Dish(100013, "Пицца", 4200, null);
 
     public static final Menu MENU_100006 = new Menu(100006, of(2019, Month.JULY, 11), RESTAURANT_100002, List.of(DISH_100010));
-    public static final Menu MENU_100007 = new Menu(100007, of(2018, Month.JULY, 11), RESTAURANT_100003, List.of(DISH_100011));
+    public static final Menu MENU_100007 = new Menu(100007, of(2019, Month.JULY, 11), RESTAURANT_100003, List.of(DISH_100011));
     public static final Menu MENU_100008 = new Menu(100008, LocalDate.now(), RESTAURANT_100002, List.of(DISH_100012));
     public static final Menu MENU_100009 = new Menu(100009, LocalDate.now(), RESTAURANT_100003, List.of(DISH_100013));
 

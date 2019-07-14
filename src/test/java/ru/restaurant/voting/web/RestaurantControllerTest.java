@@ -131,7 +131,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void getMenu() throws Exception {
         mockMvc.perform(get(REST_URL + RESTAURANT_100002.getId() + "/menu")
-                .param("date", "2018-12-11")
+                .param("date", "2019-07-11")
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(result -> assertThat(readFromJsonMvcResult(result, Menu.class)).isEqualTo(MENU_100006));

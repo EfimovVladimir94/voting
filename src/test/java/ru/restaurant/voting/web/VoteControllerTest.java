@@ -30,8 +30,8 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     void getBetween() throws Exception {
         mockMvc.perform(get(REST_URL + "/filter")
-                .param("start", "2019-07-01")
-                .param("end", "2019-07-31")
+                .param("start", "2018-07-01")
+                .param("end", "2018-07-31")
                 .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andExpect(result -> assertThat(service.getAll(USER_ID))
